@@ -1,19 +1,22 @@
 package maporarray
 
 import (
+	"strconv"
 	"testing"
 )
 
 func BenchmarkMap(b *testing.B) {
-	list := make(map[int]struct{}, b.N)
+	list := make(map[string]struct{}, b.N)
 	for i := 0; i < b.N; i++ {
-		list[i] = struct{}{}
+		idx := strconv.FormatInt(int64(i), 10)
+		list[idx] = struct{}{}
 	}
 
 	b.ResetTimer()
 	count := 0
 	for i := 0; i < b.N; i++ {
-		if _, ok := list[i]; ok {
+		idx := strconv.FormatInt(int64(i), 10)
+		if _, ok := list[idx]; ok {
 			count++
 		}
 	}
@@ -40,18 +43,16 @@ func BenchmarkArrKey(b *testing.B) {
 }
 
 func BenchmarkArrVal(b *testing.B) {
-	list := make([]int, b.N)
+	list := make([]string, b.N)
 	for i := 0; i < b.N; i++ {
-		list[i] = i
+		list[i] = strconv.FormatInt(int64(i), 10)
 	}
 	b.ResetTimer()
 	count := 0
 	for i := 0; i < b.N; i++ {
-		for idx := range list {
-			if list[idx] == i {
-				count++
-				break
-			}
+		idx := strconv.FormatInt(int64(i), 10)
+		if list[i] == idx {
+			count++
 		}
 	}
 	if count != b.N {
