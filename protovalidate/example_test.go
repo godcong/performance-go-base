@@ -20,18 +20,55 @@ func BenchmarkProtocGenValidate(b *testing.B) {
 	}
 }
 
-func BenchmarkProtoValidateGo(b *testing.B) {
-	v, err := protovalidate.New()
+var vali, err = protovalidate.New()
+
+func init() {
 	if err != nil {
-		b.Fatalf("validation failed: %v", err)
+		panic(err)
 	}
+}
+
+func BenchmarkProtoValidateGo(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		user := &User1{
 			Name: "John Doe",
 			Age:  30,
 		}
-		if err := v.Validate(user); err != nil {
+		if err := vali.Validate(user); err != nil {
 			b.Errorf("validation failed: %v", err)
 		}
 	}
+}
+
+func BenchmarkProtoValidateAll(b *testing.B) {
+	b.Run("ProtoValidateGo", func(b *testing.B) {
+		b.ReportAllocs()
+		b.ResetTimer()
+		b.RunParallel(func(p *testing.PB) {
+			for p.Next() {
+				user := &User1{
+					Name: "John Doe",
+					Age:  30,
+				}
+				if err := vali.Validate(user); err != nil {
+					b.Errorf("validation failed: %v", err)
+				}
+			}
+		})
+	})
+	b.Run("ProtocGenValidate", func(b *testing.B) {
+		b.ReportAllocs()
+		b.ResetTimer()
+		b.RunParallel(func(p *testing.PB) {
+			for p.Next() {
+				user := &User2{
+					Name: "John Doe",
+					Age:  30,
+				}
+				if err := user.Validate(); err != nil {
+					b.Errorf("validation failed: %v", err)
+				}
+			}
+		})
+	})
 }
