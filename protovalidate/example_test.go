@@ -10,7 +10,7 @@ import (
 
 func BenchmarkProtocGenValidate(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		user := &User{
+		user := &User2{
 			Name: "John Doe",
 			Age:  30,
 		}
@@ -26,7 +26,7 @@ func BenchmarkProtoValidateGo(b *testing.B) {
 		b.Fatalf("validation failed: %v", err)
 	}
 	for i := 0; i < b.N; i++ {
-		user := &User{
+		user := &User1{
 			Name: "John Doe",
 			Age:  30,
 		}

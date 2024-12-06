@@ -35,62 +35,44 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on User with the rules defined in the proto
-// definition for this message. If any rules are violated, the first error
-// encountered is returned, or nil if there are no violations.
-func (m *User) Validate() error {
+// Validate checks the field values on User1 with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *User1) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on User with the rules defined in the
+// ValidateAll checks the field values on User1 with the rules defined in the
 // proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in UserMultiError, or nil if none found.
-func (m *User) ValidateAll() error {
+// a list of violation errors wrapped in User1MultiError, or nil if none found.
+func (m *User1) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *User) validate(all bool) error {
+func (m *User1) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if utf8.RuneCountInString(m.GetName()) < 1 {
-		err := UserValidationError{
-			field:  "Name",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Name
 
-	if m.GetAge() <= 0 {
-		err := UserValidationError{
-			field:  "Age",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Age
 
 	if len(errors) > 0 {
-		return UserMultiError(errors)
+		return User1MultiError(errors)
 	}
 
 	return nil
 }
 
-// UserMultiError is an error wrapping multiple validation errors returned by
-// User.ValidateAll() if the designated constraints aren't met.
-type UserMultiError []error
+// User1MultiError is an error wrapping multiple validation errors returned by
+// User1.ValidateAll() if the designated constraints aren't met.
+type User1MultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UserMultiError) Error() string {
+func (m User1MultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -99,11 +81,11 @@ func (m UserMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UserMultiError) AllErrors() []error { return m }
+func (m User1MultiError) AllErrors() []error { return m }
 
-// UserValidationError is the validation error returned by User.Validate if the
-// designated constraints aren't met.
-type UserValidationError struct {
+// User1ValidationError is the validation error returned by User1.Validate if
+// the designated constraints aren't met.
+type User1ValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -111,22 +93,22 @@ type UserValidationError struct {
 }
 
 // Field function returns field value.
-func (e UserValidationError) Field() string { return e.field }
+func (e User1ValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UserValidationError) Reason() string { return e.reason }
+func (e User1ValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UserValidationError) Cause() error { return e.cause }
+func (e User1ValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UserValidationError) Key() bool { return e.key }
+func (e User1ValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UserValidationError) ErrorName() string { return "UserValidationError" }
+func (e User1ValidationError) ErrorName() string { return "User1ValidationError" }
 
 // Error satisfies the builtin error interface
-func (e UserValidationError) Error() string {
+func (e User1ValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -138,14 +120,14 @@ func (e UserValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUser.%s: %s%s",
+		"invalid %sUser1.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UserValidationError{}
+var _ error = User1ValidationError{}
 
 var _ interface {
 	Field() string
@@ -153,4 +135,124 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UserValidationError{}
+} = User1ValidationError{}
+
+// Validate checks the field values on User2 with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *User2) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on User2 with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in User2MultiError, or nil if none found.
+func (m *User2) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *User2) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetName()) < 1 {
+		err := User2ValidationError{
+			field:  "Name",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetAge() <= 0 {
+		err := User2ValidationError{
+			field:  "Age",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return User2MultiError(errors)
+	}
+
+	return nil
+}
+
+// User2MultiError is an error wrapping multiple validation errors returned by
+// User2.ValidateAll() if the designated constraints aren't met.
+type User2MultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m User2MultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m User2MultiError) AllErrors() []error { return m }
+
+// User2ValidationError is the validation error returned by User2.Validate if
+// the designated constraints aren't met.
+type User2ValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e User2ValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e User2ValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e User2ValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e User2ValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e User2ValidationError) ErrorName() string { return "User2ValidationError" }
+
+// Error satisfies the builtin error interface
+func (e User2ValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUser2.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = User2ValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = User2ValidationError{}

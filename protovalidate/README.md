@@ -7,14 +7,13 @@ goarch: amd64
 pkg: performance-go-base/protovalidate
 cpu: 12th Gen Intel(R) Core(TM) i7-12700H
 BenchmarkProtocGenValidate
-BenchmarkProtocGenValidate-8            178371715                6.827 ns/op
-BenchmarkProtocGenValidate-16           174528217                7.390 ns/op
-BenchmarkProtocGenValidate-32           134606652                8.017 ns/op
+BenchmarkProtocGenValidate-8            175539582                6.706 ns/op
+BenchmarkProtocGenValidate-16           184073895                6.719 ns/op
+BenchmarkProtocGenValidate-32           180479190                6.643 ns/op
 BenchmarkProtoValidateGo
-BenchmarkProtoValidateGo-8               2074315               590.8 ns/op
-BenchmarkProtoValidateGo-16              1710081               649.2 ns/op
-BenchmarkProtoValidateGo-32              1834952               596.5 ns/op
+BenchmarkProtoValidateGo-8               2220597               536.1 ns/op
+BenchmarkProtoValidateGo-16              2252672               536.8 ns/op
+BenchmarkProtoValidateGo-32              2164675               549.1 ns/op
 PASS
-ok      performance-go-base/protovalidate       12.662s
-
+ok      performance-go-base/protovalidate       10.985s
 ```
