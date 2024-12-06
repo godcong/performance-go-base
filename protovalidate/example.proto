@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "validate/validate.proto";
+import "buf/validate/validate.proto";
+
+option go_package="performance-go-base/protovalidate";
+
+message User {
+  string name = 1 [
+    (validate.rules).string.min_len = 1,
+    (buf.validate.field).string={min_len:1}
+  ];
+  int32 age = 2 [
+    (validate.rules).int32.gt = 0,
+    (buf.validate.field).int32={gt:0}
+  ];
+}
