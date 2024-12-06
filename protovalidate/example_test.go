@@ -20,7 +20,7 @@ func BenchmarkProtocGenValidate(b *testing.B) {
 	}
 }
 
-var vali, err = protovalidate.New()
+var vali, err = protovalidate.New(protovalidate.WithFailFast(true))
 
 func init() {
 	if err != nil {
