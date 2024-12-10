@@ -1,4 +1,7 @@
 // Package jsonmaporstruct implements the functions, types, and interfaces for the module.
+//
+//go:generate m
+//go:generate msgp
 package jsonmaporstruct
 
 type Object struct {

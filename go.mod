@@ -5,11 +5,11 @@ go 1.22.5
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.2-20241127180247-a33202765966.1
 	github.com/bufbuild/protovalidate-go v0.7.3
-	github.com/buger/jsonparser v1.1.1
 	github.com/bytedance/sonic v1.12.5
 	github.com/envoyproxy/protoc-gen-validate v1.1.0
 	github.com/json-iterator/go v1.1.12
 	github.com/mailru/easyjson v0.7.7
+	github.com/tinylib/msgp v1.2.5
 	github.com/valyala/fastjson v1.6.4
 	google.golang.org/protobuf v1.35.2
 )
@@ -25,6 +25,7 @@ require (
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/philhofer/fwd v1.1.3-0.20240916144458-20a13a1f6b7c // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
