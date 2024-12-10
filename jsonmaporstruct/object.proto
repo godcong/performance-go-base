@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package jsonmaporstruct;
+
+option go_package="performance-go-base/jsonmaporstruct";
+
+message ProtoObject {
+  string xvlbzgbaic = 1;
+  string krbemfdzdc = 2;
+  string rzlntxyeuc = 3;
+  string ctzkjkziva = 4;
+  string orsufumaps = 5;
+  string hyevwbtcml = 6;
+  string baatlyhdao = 7;
+  string fkfohsvvxs = 8;
+  string pqwarpxptp = 9;
+  string orvaukawww = 10;
+  ProtoObject object2 = 11;
+  ProtoObject object3 = 12;
+}
