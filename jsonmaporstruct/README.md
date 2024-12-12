@@ -1,5 +1,9 @@
 # Proto Validate Benchmark
 
+```shell
+protoc --go_out=. --go_opt=paths=source_relative *.proto
+```
+
 ```
 >go test -v -bench='$' -cpu="8,16,32" .
 goos: windows
