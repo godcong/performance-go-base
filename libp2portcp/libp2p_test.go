@@ -2,6 +2,9 @@ package libp2portcp
 
 import (
 	"context"
+	"fmt"
+	"io"
+	randv2 "math/rand/v2"
 	"net"
 	"testing"
 
@@ -34,10 +37,23 @@ func BenchmarkLibp2pTransferOneStream(b *testing.B) {
 	// 设置协议处理器
 	protocol := protocol.ID("/benchmark/1.0.0")
 	h2.SetStreamHandler(protocol, func(s network.Stream) {
-		buf := make([]byte, len(testData))
-		s.Read(buf)
-		s.Write(buf) // 回显数据
-		s.Close()
+		for i := 0; i < b.N; i++ {
+			buf := make([]byte, len(testData))
+			read, err := s.Read(buf)
+			if err != nil && err != io.EOF {
+				b.Error(err)
+				return
+			}
+			write, err := s.Write(buf)
+			if err != nil && err != io.EOF {
+				b.Error(err)
+				return
+			} // 回显数据
+			if read != write {
+				fmt.Println("read!= write")
+			}
+		}
+		_ = s.Close()
 	})
 
 	// 获取节点地址信息
@@ -53,15 +69,25 @@ func BenchmarkLibp2pTransferOneStream(b *testing.B) {
 	if err != nil {
 		b.Fatal(err)
 	}
-
 	// 运行基准测试
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		stream.Write(testData)
+		write, err := stream.Write(testData)
+		if err != nil && err != io.EOF {
+			b.Error(err)
+			return
+		}
 		buf := make([]byte, len(testData))
-		stream.Read(buf)
-		stream.Close()
+		read, err := stream.Read(buf)
+		if err != nil && err != io.EOF {
+			b.Error(err)
+			return
+		}
+		if read != write {
+			fmt.Println("read!= write")
+		}
 	}
+	stream.Close()
 }
 
 func BenchmarkLibp2pTransferMultiConnectStream(b *testing.B) {
@@ -88,8 +114,19 @@ func BenchmarkLibp2pTransferMultiConnectStream(b *testing.B) {
 	protocol := protocol.ID("/benchmark/1.0.0")
 	h2.SetStreamHandler(protocol, func(s network.Stream) {
 		buf := make([]byte, len(testData))
-		s.Read(buf)
-		s.Write(buf) // 回显数据
+		read, err := s.Read(buf)
+		if err != nil && err != io.EOF {
+			b.Error(err)
+			return
+		}
+		write, err := s.Write(buf)
+		if err != nil && err != io.EOF {
+			b.Error(err)
+			return
+		} // 回显数据
+		if read != write {
+			fmt.Println("read != write")
+		}
 		s.Close()
 	})
 
@@ -110,16 +147,31 @@ func BenchmarkLibp2pTransferMultiConnectStream(b *testing.B) {
 			b.Fatal(err)
 		}
 
-		stream.Write(testData)
+		write, err := stream.Write(testData)
+		if err != nil && err != io.EOF {
+			b.Error(err)
+			return
+		}
 		buf := make([]byte, len(testData))
-		stream.Read(buf)
+		read, err := stream.Read(buf)
+		if err != nil && err != io.EOF {
+			b.Error(err)
+			return
+		}
+		if read != write {
+			fmt.Println("read!= write")
+		}
 		stream.Close()
 	}
 }
 
 func BenchmarkTCPTransferOneConnect(b *testing.B) {
+
+	// Generate a random port between 10000 and 20000
+	port := 10000 + randv2.Int32N(20000)
+	addr := fmt.Sprintf("127.0.0.1:%d", port)
 	// 启动TCP服务器
-	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	listener, err := net.Listen("tcp", addr)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -137,10 +189,25 @@ func BenchmarkTCPTransferOneConnect(b *testing.B) {
 			if err != nil {
 				return
 			}
-			buf := make([]byte, len(testData))
-			conn.Read(buf)
-			conn.Write(buf) // 回显数据
-			conn.Close()
+
+			for i := 0; i < b.N; i++ {
+				buf := make([]byte, len(testData))
+				read, err := conn.Read(buf)
+				if err != nil && err != io.EOF {
+					b.Error(err)
+					return
+				}
+				write, err := conn.Write(buf)
+				if err != nil && err != io.EOF {
+					b.Error(err)
+					return
+				} // 回显数据
+				if read != write {
+					fmt.Println("read!= write")
+				}
+			}
+			_ = conn.Close()
+
 		}
 	}()
 	conn, err := net.Dial("tcp", listener.Addr().String())
@@ -150,16 +217,30 @@ func BenchmarkTCPTransferOneConnect(b *testing.B) {
 	// 运行基准测试
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		conn.Write(testData)
+		write, err := conn.Write(testData)
+		if err != nil && err != io.EOF {
+			b.Error(err)
+			return
+		}
 		buf := make([]byte, len(testData))
-		conn.Read(buf)
+		read, err := conn.Read(buf)
+		if err != nil && err != io.EOF {
+			b.Error(err)
+			return
+		}
+		if read != write {
+			fmt.Println("read!= write")
+		}
 	}
-	conn.Close()
+	_ = conn.Close()
 }
 
 func BenchmarkTCPTransferMultiConnect(b *testing.B) {
+	// Generate a random port between 10000 and 20000
+	port := 10000 + randv2.Int32N(20000)
+	addr := fmt.Sprintf("127.0.0.1:%d", port)
 	// 启动TCP服务器
-	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	listener, err := net.Listen("tcp", addr)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -177,10 +258,23 @@ func BenchmarkTCPTransferMultiConnect(b *testing.B) {
 			if err != nil {
 				return
 			}
-			buf := make([]byte, len(testData))
-			conn.Read(buf)
-			conn.Write(buf) // 回显数据
-			conn.Close()
+			go func(c net.Conn) {
+				defer c.Close()
+				buf := make([]byte, len(testData))
+				read, err := c.Read(buf)
+				if err != nil && err != io.EOF {
+					b.Error(err)
+					return
+				}
+				write, err := c.Write(buf)
+				if err != nil && err != io.EOF {
+					b.Error(err)
+					return
+				} // 回显数据
+				if read != write {
+					fmt.Println("read!= write")
+				}
+			}(conn)
 		}
 	}()
 
@@ -191,9 +285,20 @@ func BenchmarkTCPTransferMultiConnect(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
-		conn.Write(testData)
+		write, err := conn.Write(testData)
+		if err != nil && err != io.EOF {
+			b.Error(err)
+			return
+		}
 		buf := make([]byte, len(testData))
-		conn.Read(buf)
-		conn.Close()
+		read, err := conn.Read(buf)
+		if err != nil && err != io.EOF {
+			b.Error(err)
+			return
+		}
+		if read != write {
+			fmt.Println("read!= write")
+		}
+		_ = conn.Close()
 	}
 }
